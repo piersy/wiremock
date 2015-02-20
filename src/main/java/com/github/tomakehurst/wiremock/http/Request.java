@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Thomas Akehurst
+ * Modified by Piers Powlesland adding ability to work with request body as bytes
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,5 +31,6 @@ public interface Request {
 	Set<String> getAllHeaderKeys();
     QueryParameter queryParameter(String key);
     String getBodyAsString();
+    byte[] getBody();
 	boolean isBrowserProxyRequest();
 }

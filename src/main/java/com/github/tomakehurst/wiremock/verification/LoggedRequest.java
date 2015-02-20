@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2011 Thomas Akehurst
+ * Modified by Piers Powlesland adding ability to work with request body as bytes
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +42,7 @@ public class LoggedRequest implements Request {
 	private final RequestMethod method;
 	private final HttpHeaders headers;
     private final Map<String, QueryParameter> queryParams;
-	private final String body;
+	private final String bodyBytesAsString;
 	private final boolean isBrowserProxyRequest;
     private final Date loggedDate;
 	
@@ -60,14 +61,14 @@ public class LoggedRequest implements Request {
                          @JsonProperty("absoluteUrl") String absoluteUrl,
                          @JsonProperty("method") RequestMethod method,
                          @JsonProperty("headers") HttpHeaders headers,
-                         @JsonProperty("body") String body,
+                         @JsonProperty("body") String bodyBytesAsString,
                          @JsonProperty("browserProxyRequest") boolean isBrowserProxyRequest,
                          @JsonProperty("loggedDate") Date loggedDate) {
 
         this.url = url;
         this.absoluteUrl = absoluteUrl;
         this.method = method;
-        this.body = body;
+        this.bodyBytesAsString = bodyBytesAsString;
         this.headers = headers;
         this.queryParams = splitQuery(URI.create(url));
         this.isBrowserProxyRequest = isBrowserProxyRequest;
@@ -118,10 +119,15 @@ public class LoggedRequest implements Request {
 	@Override
     @JsonProperty("body")
 	public String getBodyAsString() {
-		return body;
+        return bodyBytesAsString;
 	}
 
-	@Override
+    @Override
+    public byte[] getBody() {
+        return bodyBytesAsString.getBytes();
+    }
+
+    @Override
     @JsonIgnore
 	public Set<String> getAllHeaderKeys() {
 		return headers.keys();
